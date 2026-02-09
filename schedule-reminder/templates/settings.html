@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}设置 - 课程提醒助手{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-gear"></i> 系统设置</h4>
+            </div>
+            <div class="card-body">
+                <form id="settingsForm">
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-key"></i> PushPlus Token
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="pushplus_token" name="pushplus_token" 
+                                   value="{{ settings.pushplus_token or '' }}" 
+                                   placeholder="请输入您的PushPlus Token">
+                            <button type="button" class="btn btn-outline-secondary" onclick="testToken()">
+                                <i class="bi bi-send"></i> 测试连接
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            Token用于向您的微信发送课程提醒消息。
+                            <a href="#token-help" data-bs-toggle="collapse">如何获取Token？</a>
+                        </div>
+                    </div>
+
+                    <div class="collapse mb-4" id="token-help">
+                        <div class="card card-body bg-light">
+                            <h5><i class="bi bi-question-circle"></i> 如何获取PushPlus Token</h5>
+                            <ol class="mb-0">
+                                <li>打开浏览器访问：<a href="http://www.pushplus.plus/" target="_blank">http://www.pushplus.plus/</a></li>
+                                <li>点击"登录"，使用微信扫码登录</li>
+                                <li>登录成功后，点击左侧菜单"一对一消息"</li>
+                                <li>复制页面上的Token（一串字母和数字的组合）</li>
+                                <li>将Token粘贴到上方输入框中</li>
+                                <li>点击"保存设置"，然后点击"测试连接"验证是否成功</li>
+                            </ol>
+                            <hr class="my-3">
+                            <p class="mb-0 text-warning">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <strong>注意：</strong>Token是您的身份标识，请妥善保管，不要泄露给他人。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label"><i class="bi bi-bell"></i> 提醒设置</label>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="mb-2">系统将在课前以下时间点发送提醒：</p>
+                                <div class="d-flex gap-2">
+                                    <span class="badge bg-primary fs-6">15分钟前</span>
+                                    <span class="badge bg-danger fs-6">5分钟前</span>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">
+                                    <i class="bi bi-info-circle"></i> 
+                                    提醒时间不可修改，默认双重提醒确保您不会错过课程
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label"><i class="bi bi-calendar-x"></i> 节假日设置</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="skip_holidays" name="skip_holidays" 
+                                   {{ 'checked' if settings.skip_holidays != 'false' else '' }}>
+                            <label class="form-check-label" for="skip_holidays">
+                                节假日自动跳过提醒
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            开启后，系统在法定节假日和周末不会发送课程提醒
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save"></i> 保存设置
+                        </button>
+                    </div>
+                </form>
+
+                <div id="settingsResult" class="mt-3" style="display: none;">
+                    <div class="alert" role="alert" id="settingsAlert"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-calendar-week"></i> 教学周设置</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">当前教学周</label>
+                        <select class="form-select" id="current_week">
+                            <option value="1">第1周</option>
+                            <option value="2">第2周</option>
+                            <option value="3">第3周</option>
+                            <option value="4">第4周</option>
+                            <option value="5">第5周</option>
+                            <option value="6">第6周</option>
+                            <option value="7">第7周</option>
+                            <option value="8">第8周</option>
+                            <option value="9">第9周</option>
+                            <option value="10">第10周</option>
+                            <option value="11">第11周</option>
+                            <option value="12">第12周</option>
+                            <option value="13">第13周</option>
+                            <option value="14">第14周</option>
+                            <option value="15">第15周</option>
+                            <option value="16">第16周</option>
+                            <option value="17">第17周</option>
+                            <option value="18">第18周</option>
+                            <option value="19">第19周</option>
+                            <option value="20">第20周</option>
+                            <option value="21">第21周</option>
+                            <option value="22">第22周</option>
+                            <option value="23">第23周</option>
+                            <option value="24">第24周</option>
+                            <option value="25">第25周</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">学期总周数</label>
+                        <select class="form-select" id="total_weeks">
+                            <option value="16">16周</option>
+                            <option value="18">18周</option>
+                            <option value="20" selected>20周</option>
+                            <option value="25">25周</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="btn btn-outline-primary w-100" onclick="autoCalcWeek()">
+                            <i class="bi bi-calculator"></i> 自动计算当前周
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">开学日期（用于自动计算）</label>
+                    <input type="date" class="form-control" id="semester_start" placeholder="请选择开学日期">
+                </div>
+                <button class="btn btn-primary" onclick="saveTeachingWeek()">
+                    <i class="bi bi-save"></i> 保存教学周设置
+                </button>
+                <div id="teachingWeekResult" class="mt-3" style="display: none;">
+                    <div class="alert" role="alert" id="teachingWeekAlert"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="bi bi-activity"></i> 系统状态
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="30%"><i class="bi bi-database"></i> 课程总数</td>
+                        <td><span class="badge bg-secondary fs-6">{{ course_count }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><i class="bi bi-calendar-check"></i> 今日课程</td>
+                        <td><span class="badge bg-info fs-6">{{ today_count }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><i class="bi bi-clock-history"></i> 定时任务状态</td>
+                        <td>
+                            <span class="badge bg-success fs-6">
+                                <i class="bi bi-check-circle"></i> 运行中
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="bi bi-calendar-date"></i> 当前日期</td>
+                        <td>{{ current_date }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <i class="bi bi-lightbulb"></i> 使用提示
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        确保Token正确配置，否则无法接收提醒
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        建议先点击"测试连接"验证配置
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        保持程序运行才能接收定时提醒
+                    </li>
+                    <li class="mb-0">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        支持Excel批量导入课程
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <i class="bi bi-trash"></i> 数据管理
+            </div>
+            <div class="card-body">
+                <button class="btn btn-outline-danger w-100" onclick="clearAllCourses()">
+                    <i class="bi bi-trash-fill"></i> 清空所有课程
+                </button>
+                <p class="text-muted small mt-2 mb-0">
+                    此操作将删除所有课程数据，不可恢复！
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
