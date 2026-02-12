@@ -1,1 +1,0 @@
-# class-wechat_reminder
